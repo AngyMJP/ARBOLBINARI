@@ -1,73 +1,311 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- You may freely edit this file. See commented blocks below for -->
-<!-- some examples of how to customize the build. -->
-<!-- (If you delete it and reopen the project it will be recreated.) -->
-<!-- By default, only the Clean and Build commands use this build script. -->
-<!-- Commands such as Run, Debug, and Test only use this build script if -->
-<!-- the Compile on Save feature is turned off for the project. -->
-<!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
-<!-- in the project's Project Properties dialog box.-->
-<project name="ArbolBinario2" default="default" basedir=".">
-    <description>Builds, tests, and runs the project ArbolBinario2.</description>
-    <import file="nbproject/build-impl.xml"/>
-    <!--
+public class Node {
+	String name; //campo de datos
+	Node izquierdo;
+    Node derecho;   //campo enlace
+}
 
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
+import java.util.Scanner;
 
-      -pre-init:                 called before initialization of project properties
-      -post-init:                called after initialization of project properties
-      -pre-compile:              called before javac compilation
-      -post-compile:             called after javac compilation
-      -pre-compile-single:       called before javac compilation of single file
-      -post-compile-single:      called after javac compilation of single file
-      -pre-compile-test:         called before javac compilation of JUnit tests
-      -post-compile-test:        called after javac compilation of JUnit tests
-      -pre-compile-test-single:  called before javac compilation of single JUnit test
-      -post-compile-test-single: called after javac compilation of single JUunit test
-      -pre-jar:                  called before JAR building
-      -post-jar:                 called after JAR building
-      -post-clean:               called after cleaning build products
+public class ProgramaArbolBinario {
+	
+	public static void main(String[] args){
 
-    (Targets beginning with '-' are not intended to be called on their own.)
+	           ArbolBinario arbol = new ArbolBinario("A");
+            arbol.agregarHijoIzquierdo("B", arbol.raiz);
+            arbol.agregarHijoDerecho("C", arbol.raiz);
+            arbol.agregarHijoIzquierdo("D", arbol.raiz.izquierdo);
+            arbol.agregarHijoDerecho("E", arbol.raiz.izquierdo);
+            arbol.agregarHijoIzquierdo("F", arbol.raiz.derecho);
+            arbol.agregarHijoDerecho("G", arbol.raiz.derecho);
+            arbol.agregarHijoIzquierdo("H", arbol.raiz.izquierdo.izquierdo);
+            arbol.agregarHijoDerecho("I", arbol.raiz.izquierdo.izquierdo);
+            arbol.agregarHijoIzquierdo("J", arbol.raiz.izquierdo.derecho);
+            arbol.agregarHijoDerecho("K", arbol.raiz.izquierdo.derecho);
+            arbol.agregarHijoIzquierdo("L", arbol.raiz.derecho.izquierdo);
+            arbol.agregarHijoDerecho("M", arbol.raiz.derecho.izquierdo);
 
-    Example of inserting an obfuscator after compilation could look like this:
+            Scanner scanner = new Scanner(System.in);
 
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
+            int opcion;
+            do {
+                System.out.println("<<<---Menú--->>>>");
+                System.out.println("1. -Imprimir árbol de manera horizontal- ");
+                System.out.println("2. -Buscar un Nodo- ");
+                System.out.println("3. -Recorrer el árbol en preorden- ");
+                System.out.println("4. -Recorrer el arbol en inorden- ");
+                System.out.println("5. -Recorrer el arbol en postorden- ");
+                System.out.println("6. -Eliminar un nodo por su valor- ");
+                System.out.println("7. -Salir- ");
+                System.out.println("Ingrese el número de la opción: ");
 
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
+                opcion = scanner.nextInt();
+
+                switch (opcion) {
+                    
+                    case 1:
+                        System.out.println("Impresion del Arbol Horizontal.");
+                        arbol.imprimirHorizontal();   
+                        System.out.println("----");
+                        break;
+                        
+                        
+                    case 2:                        
+                        // Solicitar al usuario que ingrese el valor a buscar
+                        System.out.print("Ingrese el valor a buscar en el árbol: ");
+                        String valorABuscar = scanner.next();
+
+                        // Buscar el nodo por su valor
+                        ArbolBinario.ResultadoBusqueda resultado = arbol.buscarNodo(valorABuscar);
+                        
+                        if (resultado != null) {
+                            System.out.println("Nodo encontrado: " + resultado.nodoEncontrado.name);
+                            System.out.println("Posición (Izquierda/Derecha): " + resultado.posicion);
+                            System.out.println("----");
+                        } else {
+                            System.out.println("Nodo no encontrado.");
+                            System.out.println("----");}
+                        break;
+                        
+                    case 3:
+                        // Imprimir el árbol en preorden
+                        System.out.println("Árbol en preorden:");
+                        arbol.recorrerPreorden();   
+                        System.out.println("----");
+                        break;
+
+                    case 4:
+                        // Imprimir el árbol en inorden
+                        System.out.println("Árbol en inorden:");
+                        arbol.recorrerInorden();
+                        System.out.println("----");
+                        break;
+                        
+                        
+                    case 5:
+                        // Imprimir el árbol en inorden
+                        System.out.println("Árbol en postOrden:");
+                        arbol.recorrerPostorden();
+                        System.out.println("----");
+                        break;    
+                        
+                        
+                    case 6:
+                        // Obtener el valor que el usuario desea eliminar
+                        System.out.print("Ingrese el valor que desea eliminar: ");
+                        scanner.nextLine(); // Limpia el búfer
+                        String valorAEliminar = scanner.nextLine();
+
+                        // Eliminar el nodo con el valor ingresado
+                        arbol.eliminarNodo(valorAEliminar);
+
+                        // Imprimir el árbol después de la eliminación
+                        System.out.println("Árbol después de la eliminación:");
+                        arbol.recorrerInorden();
+                        System.out.println("----");
+                        break;
+                               
+                    case 7:
+                        System.out.println("Saliendo del programa. ¡Hasta luego!");
+                        break;
+                        
+                    default:
+                        System.out.println("Opción no válida. Intente de nuevo.");
+                        break;
+                }
+
+            } while (opcion != 7);
+
+            scanner.close();		
+	}
+        
+}
 
 
-    Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
+                    public class ArbolBinario {
+    Node raiz;
 
-      -init-macrodef-javac:     defines macro for javac compilation
-      -init-macrodef-junit:     defines macro for junit execution
-      -init-macrodef-debug:     defines macro for class debugging
-      -init-macrodef-java:      defines macro for class execution
-      -do-jar:                  JAR building
-      run:                      execution of project 
-      -javadoc-build:           Javadoc generation
-      test-report:              JUnit report generation
+    // Constructor para crear el árbol con una raíz inicial
+    public ArbolBinario(String dato) {
+        // Crear raíz
+        this.raiz = new Node();
+        this.raiz.name = dato;
+        this.raiz.izquierdo = null;
+        this.raiz.derecho = null;
+    }
 
-    An example of overriding the target for project execution could look like this:
+    // Método para agregar un hijo izquierdo a un nodo específico
+    public void agregarHijoIzquierdo(String dato, Node arbol) {
+        // Crear nodo hijo
+        Node hijo = new Node();
+        hijo.name = dato;
+        hijo.izquierdo = null;
+        hijo.derecho = null;
 
-        <target name="run" depends="ArbolBinario2-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
+        // Agregar como hijo izquierdo
+        arbol.izquierdo = hijo;
 
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
-    properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
+        // Liberar la referencia auxiliar
+        hijo = null;
+    }
 
-    -->
-</project>
+    // Método para agregar un hijo derecho a un nodo específico
+    public void agregarHijoDerecho(String dato, Node arbol) {
+        // Crear nodo hijo
+        Node hijo = new Node();
+        hijo.name = dato;
+        hijo.izquierdo = null;
+        hijo.derecho = null;
+
+        // Agregar como hijo derecho
+        arbol.derecho = hijo;
+
+        // Liberar la referencia auxiliar
+        hijo = null;
+    }
+
+    // Método para imprimir el árbol de manera horizontal
+    public void imprimirHorizontal() {
+        imprimirHorizontalUtil(raiz, 0);
+    }
+
+    private void imprimirHorizontalUtil(Node nodo, int nivel) {
+        if (nodo != null) {
+            imprimirHorizontalUtil(nodo.derecho, nivel + 1);
+
+            for (int i = 0; i < nivel; i++) {
+                System.out.print("    ");
+            }
+
+            System.out.println(nodo.name);
+
+            imprimirHorizontalUtil(nodo.izquierdo, nivel + 1);
+        }
+    }
+
+    // Clase interna para almacenar el resultado de la búsqueda
+    public static class ResultadoBusqueda {
+        Node nodoEncontrado;
+        String posicion;
+
+        public ResultadoBusqueda(Node nodoEncontrado, String posicion) {
+            this.nodoEncontrado = nodoEncontrado;
+            this.posicion = posicion;
+        }
+    }
+
+    // Método para buscar un nodo por su valor
+    public ResultadoBusqueda buscarNodo(String valor) {
+        return buscarNodoRecursivo(raiz, valor, "");
+    }
+
+    private ResultadoBusqueda buscarNodoRecursivo(Node nodo, String valor, String posicion) {
+        if (nodo == null) {
+            return null;
+        }
+
+        if (nodo.name.equals(valor)) {
+            return new ResultadoBusqueda(nodo, posicion);
+        }
+
+        // Buscar en el subárbol izquierdo
+        ResultadoBusqueda resultadoIzquierdo = buscarNodoRecursivo(nodo.izquierdo, valor, posicion + "I");
+        if (resultadoIzquierdo != null) {
+            return resultadoIzquierdo;
+        }
+
+        // Buscar en el subárbol derecho
+        ResultadoBusqueda resultadoDerecho = buscarNodoRecursivo(nodo.derecho, valor, posicion + "D");
+        return resultadoDerecho;
+    }
+
+    // Método para recorrer el árbol en preorden
+    public void recorrerPreorden() {
+        recorrerPreordenUtil(raiz);
+    }
+
+    private void recorrerPreordenUtil(Node nodo) {
+        if (nodo != null) {
+            System.out.println(nodo.name + " "); // Imprimir el nodo actual
+            recorrerPreordenUtil(nodo.izquierdo); // Recorrer el subárbol izquierdo
+            recorrerPreordenUtil(nodo.derecho);   // Recorrer el subárbol derecho
+        }
+    }
+
+    // Método para recorrer el árbol en inorden
+    public void recorrerInorden() {
+        recorrerInordenUtil(raiz);
+    }
+
+    private void recorrerInordenUtil(Node nodo) {
+        if (nodo != null) {
+            recorrerInordenUtil(nodo.izquierdo); // Recorrer el subárbol izquierdo
+            System.out.println(nodo.name + " ");  // Imprimir el nodo actual
+            recorrerInordenUtil(nodo.derecho);    // Recorrer el subárbol derecho
+        }
+    }
+
+    // Método para recorrer el árbol en postorden
+    public void recorrerPostorden() {
+        recorrerPostordenUtil(raiz);
+    }
+
+    private void recorrerPostordenUtil(Node nodo) {
+        if (nodo != null) {
+            recorrerPostordenUtil(nodo.izquierdo); // Recorrer el subárbol izquierdo
+            recorrerPostordenUtil(nodo.derecho);   // Recorrer el subárbol derecho
+            System.out.println(nodo.name + " ");   // Imprimir el nodo actual
+        }
+    }
+
+    // Método para eliminar un nodo por su valor
+    public void eliminarNodo(String valor) {
+        raiz = eliminarNodoRecursivo(raiz, valor);
+    }
+
+    private Node eliminarNodoRecursivo(Node nodo, String valor) {
+        if (nodo == null) {
+            return null;
+        }
+
+        // Buscar el nodo a eliminar en el subárbol izquierdo
+        if (valor.compareTo(nodo.name) < 0) {
+            nodo.izquierdo = eliminarNodoRecursivo(nodo.izquierdo, valor);
+        }
+        // Buscar el nodo a eliminar en el subárbol derecho
+        else if (valor.compareTo(nodo.name) > 0) {
+            nodo.derecho = eliminarNodoRecursivo(nodo.derecho, valor);
+        }
+        // Nodo encontrado, proceder a la eliminación
+        else {
+            // Caso 1: Nodo es una hoja (sin hijos)
+            if (nodo.izquierdo == null && nodo.derecho == null) {
+                return null;
+            }
+            // Caso 2: Nodo tiene un solo hijo
+            else if (nodo.izquierdo == null) {
+                return nodo.derecho;
+            } else if (nodo.derecho == null) {
+                return nodo.izquierdo;
+            }
+            // Caso 3: Nodo tiene dos hijos
+            else {
+                // Encontrar el sucesor en orden en el subárbol derecho
+                Node sucesor = encontrarNodoSucesor(nodo.derecho);
+                // Copiar el valor del sucesor al nodo actual
+                nodo.name = sucesor.name;
+                // Eliminar el sucesor en el subárbol derecho
+                nodo.derecho = eliminarNodoRecursivo(nodo.derecho, sucesor.name);
+            }
+        }
+
+        return nodo;  // Devolver el nodo actualizado después de la eliminación
+    }
+
+    // Método auxiliar para encontrar el sucesor en orden
+    private Node encontrarNodoSucesor(Node nodo) {
+        while (nodo.izquierdo != null) {
+            nodo = nodo.izquierdo;
+        }
+        return nodo;
+    }
+}
